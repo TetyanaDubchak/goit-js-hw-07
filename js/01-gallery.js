@@ -24,26 +24,23 @@ function onGalleryListOpenHandler(event) {
 
   if (!picture.classList.contains('gallery__image')) {
     return;
-  } 
+  }
 
   const instance = basicLightbox.create(`
      <img src="${picture.dataset.source}" width="800" height="600"/>
-`)
-  instance.show();
+`, {
+    onShow: (instance) => {document.addEventListener('keydown', onGalleryListCloseHandler)},
+    onClose: (instance) => { document.removeEventListener('keydown', onGalleryListCloseHandler)}
+  })
 
+  instance.show();
 
   galleryListElem.addEventListener('keydown', onGalleryListCloseHandler);
   
   function onGalleryListCloseHandler(evn) {
-    const visible = basicLightbox.visible()
-    const escape = evn.code === 'Escape'
-    if (visible) {
-          if (escape) {
-           instance.close()
-           console.dir('close');
-          }
+    if (evn.code === 'Escape') {
+      instance.close()
     }
-
   }
 };
 
